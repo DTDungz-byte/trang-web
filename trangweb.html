@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>daothedung - Cửa Hàng Công Nghệ Cao Cấp</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0d14',
+                            card: '#121824',
+                            accent: '#00f0ff',
+                            purple: '#7000ff',
+                            pink: '#ff007f'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0a0d14; color: #f3f4f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .neon-border { box-shadow: 0 0 15px rgba(0, 240, 255, 0.3); }
+        .neon-border:hover { box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); }
+        .glass { background: rgba(18, 24, 36, 0.85); backdrop-filter: blur(12px); }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0d14; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-50 glass border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" onclick="showSection('products')" class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-500 to-pink-500">
+                daothedung<span class="text-cyan-400">.tech</span>
+            </a>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-md mx-8 relative">
+                <input type="text" id="searchInput" oninput="filterProducts()" placeholder="Tìm kiếm sản phẩm (iPhone, Mac, Gaming...)..." 
+                    class="w-full bg-gray-900 border border-gray-700 rounded-full py-2 pl-10 pr-4 text-sm text-gray-200 focus:outline-none focus:border-cyan-400 transition">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-2.5 text-gray-400"></i>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-4">
+                <button onclick="toggleArcadeHub()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-sm hover:opacity-90 transition shadow-lg shadow-purple-500/30">
+                    <i class="fa-solid fa-gamepad text-lg animate-bounce"></i>
+                    <span>Arcade Hub (WASD)</span>
+                </button>
+
+                <button onclick="openCart()" class="relative p-2 text-gray-300 hover:text-cyan-400 transition">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- SECTION 1: PRODUCT CATALOG -->
+        <section id="productsSection">
+            <!-- Hero Banner -->
+            <div class="relative rounded-2xl overflow-hidden mb-10 border border-gray-800 bg-gradient-to-r from-gray-900 via-indigo-950 to-gray-900 p-8 md:p-12">
+                <div class="max-w-xl z-10 relative">
+                    <span class="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-xs font-bold uppercase tracking-widest border border-cyan-500/30">Siêu Phẩm 2026</span>
+                    <h1 class="text-3xl md:text-5xl font-extrabold text-white mt-4 leading-tight">Đột Phá Công Nghệ Thế Hệ Mới</h1>
+                    <p class="text-gray-400 mt-3 text-sm md:text-base">Khám phá các thiết bị flagship chính hãng với cấu hình vượt trội và mức giá ưu đãi nhất tại daothedung.</p>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-fire text-pink-500"></i> Danh Sách Sản Phẩm (15)
+                </h2>
+            </div>
+
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Products dynamically rendered here -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: CHECKOUT -->
+        <section id="checkoutSection" class="hidden">
+            <button onclick="showSection('products')" class="mb-6 flex items-center gap-2 text-cyan-400 hover:underline">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại mua sắm
+            </button>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Checkout Form -->
+                <div class="lg:col-span-2 bg-gray-900 p-6 rounded-2xl border border-gray-800">
+                    <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-3">Thông Tin Thanh Toán</h2>
+                    <form id="checkoutForm" onsubmit="processOrder(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">HỌ VÀ TÊN *</label>
+                                <input type="text" required placeholder="Nguyễn Văn A" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-400 mb-1">SỐ ĐIỆN THOẠI *</label>
+                                <input type="tel" required placeholder="0901234567" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-400">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">EMAIL *</label>
+                            <input type="email" required placeholder="khachhang@gmail.com" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-400">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">ĐỊA CHỈ GIAO HÀNG *</label>
+                            <textarea required rows="2" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-cyan-400"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-2">PHƯƠNG THỨC THANH TOÁN</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <label class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700 cursor-pointer hover:border-cyan-400">
+                                    <input type="radio" name="payment" value="COD" checked class="text-cyan-400 focus:ring-0">
+                                    <span class="text-sm font-medium text-gray-200">Thanh toán COD</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700 cursor-pointer hover:border-cyan-400">
+                                    <input type="radio" name="payment" value="BANK" class="text-cyan-400 focus:ring-0">
+                                    <span class="text-sm font-medium text-gray-200">Chuyển khoản Ngân hàng</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 mt-4 bg-gradient-to-r from-cyan-500 to-blue-600 font-bold text-white rounded-xl shadow-lg hover:opacity-95 transition">
+                            XÁC NHẬN ĐẶT HÀNG (GIẢ LẬP)
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="bg-gray-900 p-6 rounded-2xl border border-gray-800 h-fit">
+                    <h3 class="text-lg font-bold text-white mb-4">Tóm Tắt Đơn Hàng</h3>
+                    <div id="checkoutItems" class="space-y-3 max-h-60 overflow-y-auto pr-1"></div>
+                    <div class="border-t border-gray-800 my-4 pt-4 space-y-2">
+                        <div class="flex justify-between text-sm text-gray-400">
+                            <span>Tạm tính:</span>
+                            <span id="checkoutSubtotal">0₫</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-400">
+                            <span>Phí vận chuyển:</span>
+                            <span class="text-green-400">Miễn phí</span>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold text-white pt-2 border-t border-gray-800">
+                            <span>Tổng tiền:</span>
+                            <span id="checkoutTotal" class="text-cyan-400">0₫</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FLOATING IPHONE FLIP PROMO POSTER (BOTTOM-RIGHT) -->
+    <div id="flipPoster" class="fixed bottom-4 right-4 z-40 max-w-xs sm:max-w-sm w-full bg-gray-900/95 border border-pink-500/50 rounded-2xl p-4 shadow-2xl backdrop-blur-md transition-all duration-300">
+        <div class="flex justify-between items-start mb-2">
+            <span class="px-2 py-0.5 bg-pink-500/20 text-pink-400 rounded text-[10px] font-bold uppercase tracking-wider border border-pink-500/30">
+                🔥 Khuyến Mãi Độc Quyền (1/10 - 30/11)
+            </span>
+            <button onclick="toggleFlipPoster()" class="text-gray-400 hover:text-white text-xs p-1">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        
+        <div class="flex gap-3 items-center">
+            <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300" alt="iPhone Flip" class="w-20 h-20 object-cover rounded-xl border border-gray-700">
+            <div>
+                <h4 class="font-bold text-white text-sm">iPhone Flip Ultra</h4>
+                <p class="text-xs text-gray-400">Màn hình gập không nếp gấp</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-pink-400 font-black text-sm">22.995.000₫</span>
+                    <span class="text-gray-500 line-through text-[10px]">45.990.000₫</span>
+                    <span class="bg-pink-500 text-white text-[9px] font-bold px-1 rounded">-50%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="mt-3 pt-2 border-t border-gray-800 flex items-center justify-between">
+            <span class="text-[10px] text-gray-400">Kết thúc trong:</span>
+            <div id="countdownTimer" class="font-mono text-xs font-bold text-cyan-400">00d : 00h : 00m : 00s</div>
+        </div>
+
+        <button onclick="viewFlipDetails()" class="w-full mt-2 py-1.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold rounded-lg hover:opacity-90 transition">
+            Xem Chi Tiết & Đặt Hàng
+        </button>
+    </div>
+
+    <!-- CART DRAWER MODAL -->
+    <div id="cartModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex justify-end hidden">
+        <div class="w-full max-w-md bg-gray-900 h-full p-6 flex flex-col justify-between border-l border-gray-800">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-gray-800">
+                    <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-cyan-400"></i> Giỏ Hàng Của Bạn
+                    </h3>
+                    <button onclick="closeCart()" class="text-gray-400 hover:text-white">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+                <div id="cartItemsList" class="mt-4 space-y-4 max-h-[60vh] overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-4">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-400">Tổng tiền:</span>
+                    <span id="cartTotalPrice" class="text-xl font-black text-cyan-400">0₫</span>
+                </div>
+                <button onclick="goToCheckout()" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:opacity-90 transition">
+                    Tiến Hành Thanh Toán
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div id="detailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- ARCADE HUB MODAL (GAMES: SNAKE, TETRIS, 2048 WITH WASD) -->
+    <div id="arcadeModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-900 border border-purple-500/40 rounded-2xl max-w-3xl w-full p-6 relative">
+            <button onclick="toggleArcadeHub()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="flex items-center justify-between mb-4 border-b border-gray-800 pb-3">
+                <h3 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 flex items-center gap-2">
+                    <i class="fa-solid fa-gamepad"></i> ARCADE TECH HUB
+                </h3>
+                <!-- Game Tabs -->
+                <div class="flex gap-2">
+                    <button onclick="switchGame('snake')" id="btnGameSnake" class="px-3 py-1 rounded bg-purple-600 text-white text-xs font-bold">Rắn Săn Mồi</button>
+                    <button onclick="switchGame('tetris')" id="btnGameTetris" class="px-3 py-1 rounded bg-gray-800 text-gray-300 text-xs font-bold">Xếp Hình</button>
+                    <button onclick="switchGame('2048')" id="btnGame2048" class="px-3 py-1 rounded bg-gray-800 text-gray-300 text-xs font-bold">2048 Tech</button>
+                </div>
+            </div>
+
+            <!-- Game Viewport -->
+            <div class="flex flex-col items-center justify-center min-h-[340px] bg-black/60 rounded-xl p-4 border border-gray-800 relative">
+                <!-- SNAKE GAME -->
+                <div id="snakeContainer" class="flex flex-col items-center">
+                    <div class="text-xs text-gray-400 mb-2 flex gap-4">
+                        <span>Điểm: <strong id="snakeScore" class="text-cyan-400">0</strong></span>
+                        <span>Kỷ Lục: <strong id="snakeHighScore" class="text-pink-400">0</strong></span>
+                    </div>
+                    <canvas id="snakeCanvas" width="300" height="300" class="bg-gray-950 rounded border border-gray-800"></canvas>
+                </div>
+
+                <!-- TETRIS GAME -->
+                <div id="tetrisContainer" class="hidden flex flex-col items-center">
+                    <div class="text-xs text-gray-400 mb-2 flex gap-4">
+                        <span>Điểm: <strong id="tetrisScore" class="text-cyan-400">0</strong></span>
+                        <span>Kỷ Lục: <strong id="tetrisHighScore" class="text-pink-400">0</strong></span>
+                    </div>
+                    <canvas id="tetrisCanvas" width="200" height="300" class="bg-gray-950 rounded border border-gray-800"></canvas>
+                </div>
+
+                <!-- 2048 GAME -->
+                <div id="2048Container" class="hidden flex flex-col items-center">
+                    <div class="text-xs text-gray-400 mb-2 flex gap-4">
+                        <span>Điểm: <strong id="score2048" class="text-cyan-400">0</strong></span>
+                        <span>Kỷ Lục: <strong id="high2048" class="text-pink-400">0</strong></span>
+                    </div>
+                    <div id="grid2048" class="grid grid-cols-4 gap-2 bg-gray-950 p-2 rounded-xl border border-gray-800 w-[260px] h-[260px]"></div>
+                </div>
+
+                <!-- GAME OVER OVERLAY -->
+                <div id="gameOverOverlay" class="absolute inset-0 bg-black/85 backdrop-blur-sm flex flex-col items-center justify-center hidden rounded-xl">
+                    <h4 class="text-2xl font-black text-pink-500 mb-1">GAME OVER</h4>
+                    <p id="gameOverText" class="text-sm text-gray-300 mb-4">Điểm đạt được: 0</p>
+                    <button onclick="restartCurrentGame()" class="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-xs rounded-lg hover:opacity-90">
+                        Chơi Lại Ván Mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- WASD CONTROLS HUD -->
+            <div class="mt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-950 p-3 rounded-xl border border-gray-800 text-xs text-gray-400">
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-gray-300">Điều khiển bàn phím:</span>
+                    <div class="flex gap-1">
+                        <kbd id="keyW" class="px-2 py-1 bg-gray-800 rounded font-mono text-white">W</kbd>
+                        <kbd id="keyA" class="px-2 py-1 bg-gray-800 rounded font-mono text-white">A</kbd>
+                        <kbd id="keyS" class="px-2 py-1 bg-gray-800 rounded font-mono text-white">S</kbd>
+                        <kbd id="keyD" class="px-2 py-1 bg-gray-800 rounded font-mono text-white">D</kbd>
+                    </div>
+                </div>
+
+                <!-- Touch D-Pad for Mobile -->
+                <div class="flex gap-1 sm:hidden">
+                    <button onclick="triggerKey('W')" class="p-2 bg-gray-800 rounded text-white active:bg-cyan-500">⬆️</button>
+                    <button onclick="triggerKey('A')" class="p-2 bg-gray-800 rounded text-white active:bg-cyan-500">⬅️</button>
+                    <button onclick="triggerKey('S')" class="p-2 bg-gray-800 rounded text-white active:bg-cyan-500">⬇️</button>
+                    <button onclick="triggerKey('D')" class="p-2 bg-gray-800 rounded text-white active:bg-cyan-500">➡️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 15 PRODUCTS DATA
+        const PRODUCTS = [
+            { id: 1, name: "iPhone 15 Pro Max", price: 34990000, chip: "Apple A17 Pro", ram: "8GB", storage: "256GB", screen: "6.7 inch Super Retina XDR", img: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500" },
+            { id: 2, name: "MacBook Pro 16 M3 Max", price: 89990000, chip: "Apple M3 Max", ram: "36GB", storage: "1TB SSD", screen: "16.2 inch Liquid Retina XDR", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500" },
+            { id: 3, name: "iPad Pro M4 13-inch", price: 37990000, chip: "Apple M4 Ultra", ram: "16GB", storage: "512GB", screen: "13 inch Tandem OLED", img: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500" },
+            { id: 4, name: "AirPods Pro Gen 2", price: 5990000, chip: "Apple H2", ram: "N/A", storage: "Case MagSafe USB-C", screen: "N/A", img: "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=500" },
+            { id: 5, name: "Samsung Galaxy S24 Ultra", price: 31990000, chip: "Snapdragon 8 Gen 3", ram: "12GB", storage: "512GB", screen: "6.8 inch Dynamic AMOLED 2X", img: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500" },
+            { id: 6, name: "Apple Watch Series 9", price: 10490000, chip: "Apple S9 SiP", ram: "64GB", storage: "64GB", screen: "OLED Always-On Display", img: "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500" },
+            { id: 7, name: "Sony WH-1000XM5", price: 8490000, chip: "Integrated Processor V1", ram: "N/A", storage: "Pin 30 Giờ", screen: "Touch Controls", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500" },
+            { id: 8, name: "Dell XPS 15 9530", price: 52990000, chip: "Intel Core i9-13900H", ram: "32GB", storage: "1TB SSD", screen: "15.6 inch 3.5K OLED Touch", img: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500" },
+            { id: 9, name: "Asus ROG Ally X", price: 24990000, chip: "AMD Ryzen Z1 Extreme", ram: "24GB LPDDR5X", storage: "1TB SSD", screen: "7 inch FHD 120Hz", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500" },
+            { id: 10, name: "iPad Air M2 11-inch", price: 16990000, chip: "Apple M2", ram: "8GB", storage: "128GB", screen: "11 inch Liquid Retina", img: "https://images.unsplash.com/photo-1561154464-82e9adf32764?w=500" },
+            { id: 11, name: "Samsung Galaxy Tab S9 Ultra", price: 27990000, chip: "Snapdragon 8 Gen 2", ram: "12GB", storage: "256GB", screen: "14.6 inch Dynamic AMOLED 2X", img: "https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500" },
+            { id: 12, name: "Logitech MX Master 3S", price: 2490000, chip: "8000 DPI Darkfield", ram: "N/A", storage: "Pin 70 Ngày", screen: "Quiet Clicks", img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500" },
+            { id: 13, name: "Anker Prime PowerBank 200W", price: 3290000, chip: "Smart Digital Display", ram: "N/A", storage: "20,000mAh", screen: "Màn hình hiển thị công suất", img: "https://images.unsplash.com/photo-1609592424109-dd9892f1b177?w=500" },
+            { id: 14, name: "Apple Magic Mouse Black", price: 2290000, chip: "Multi-Touch", ram: "N/A", storage: "Cổng Lightning/USB-C", screen: "N/A", img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500" },
+            { id: 15, name: "HomePod mini Midnight", price: 2690000, chip: "Apple S5", ram: "N/A", storage: "Âm thanh 360 độ", screen: "Touch Surface", img: "https://images.unsplash.com/photo-1543512214-318c7553f230?w=500" }
+        ];
+
+        let cart = [];
+        let currentGame = 'snake';
+
+        // INITIALIZE APP
+        window.onload = () => {
+            renderProducts(PRODUCTS);
+            startCountdown();
+            initSnakeGame();
+            initTetrisGame();
+            init2048Game();
+            setupWASDListeners();
+        };
+
+        // RENDER PRODUCTS
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = items.map(p => `
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col justify-between neon-border transition">
+                    <div>
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-48 object-cover rounded-xl mb-4 bg-gray-950">
+                        <h3 class="font-bold text-white text-base mb-1">${p.name}</h3>
+                        <p class="text-xs text-gray-400 mb-2">Chip: ${p.chip} | RAM: ${p.ram}</p>
+                    </div>
+                    <div>
+                        <div class="text-cyan-400 font-black text-lg mb-3">${p.price.toLocaleString('vi-VN')}₫</div>
+                        <div class="flex gap-2">
+                            <button onclick="showDetail(${p.id})" class="flex-1 py-2 bg-gray-800 text-gray-300 text-xs font-bold rounded-lg hover:bg-gray-700">Chi Tiết</button>
+                            <button onclick="addToCart(${p.id})" class="flex-1 py-2 bg-cyan-500 text-black text-xs font-bold rounded-lg hover:bg-cyan-400">Thêm Giỏ</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // SEARCH FILTER
+        function filterProducts() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = PRODUCTS.filter(p => p.name.toLowerCase().includes(term) || p.chip.toLowerCase().includes(term));
+            renderProducts(filtered);
+        }
+
+        // CART SYSTEM
+        function addToCart(id) {
+            const prod = PRODUCTS.find(p => p.id === id);
+            const exist = cart.find(item => item.id === id);
+            if (exist) { exist.qty++; } else { cart.push({ ...prod, qty: 1 }); }
+            updateCart();
+            openCart();
+        }
+
+        function updateCart() {
+            const badge = document.getElementById('cartBadge');
+            const totalCount = cart.reduce((s, i) => s + i.qty, 0);
+            badge.innerText = totalCount;
+            badge.classList.toggle('hidden', totalCount === 0);
+
+            const list = document.getElementById('cartItemsList');
+            list.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between bg-gray-800 p-3 rounded-xl">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.img}" class="w-12 h-12 rounded object-cover">
+                        <div>
+                            <h4 class="text-xs font-bold text-white">${item.name}</h4>
+                            <span class="text-xs text-cyan-400">${item.price.toLocaleString('vi-VN')}₫</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 bg-gray-700 rounded text-white text-xs font-bold">-</button>
+                        <span class="text-xs font-bold text-white">${item.qty}</span>
+                        <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 bg-gray-700 rounded text-white text-xs font-bold">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            document.getElementById('cartTotalPrice').innerText = total.toLocaleString('vi-VN') + '₫';
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            }
+            updateCart();
+        }
+
+        function openCart() { document.getElementById('cartModal').classList.remove('hidden'); }
+        function closeCart() { document.getElementById('cartModal').classList.add('hidden'); }
+
+        // NAVIGATION
+        function showSection(sec) {
+            document.getElementById('productsSection').classList.toggle('hidden', sec !== 'products');
+            document.getElementById('checkoutSection').classList.toggle('hidden', sec !== 'checkout');
+        }
+
+        function goToCheckout() {
+            closeCart();
+            showSection('checkout');
+            const checkoutList = document.getElementById('checkoutItems');
+            checkoutList.innerHTML = cart.map(i => `
+                <div class="flex justify-between text-xs text-gray-300">
+                    <span>${i.name} (x${i.qty})</span>
+                    <span>${(i.price * i.qty).toLocaleString('vi-VN')}₫</span>
+                </div>
+            `).join('');
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            document.getElementById('checkoutSubtotal').innerText = total.toLocaleString('vi-VN') + '₫';
+            document.getElementById('checkoutTotal').innerText = total.toLocaleString('vi-VN') + '₫';
+        }
+
+        function processOrder(e) {
+            e.preventDefault();
+            alert('🎉 ĐẶT HÀNG THÀNH CÔNG!\nCảm ơn bạn đã mua sắm tại daothedung.');
+            cart = [];
+            updateCart();
+            showSection('products');
+        }
+
+        // DETAIL MODAL
+        function showDetail(id) {
+            const p = PRODUCTS.find(item => item.id === id);
+            document.getElementById('detailContent').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <img src="${p.img}" class="w-full h-64 object-cover rounded-xl border border-gray-800">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">${p.name}</h3>
+                        <p class="text-cyan-400 font-black text-xl mb-4">${p.price.toLocaleString('vi-VN')}₫</p>
+                        <div class="space-y-2 text-xs text-gray-300 mb-6 bg-gray-950 p-4 rounded-xl">
+                            <p>⚡ <strong>Vi xử lý (Chip):</strong> ${p.chip}</p>
+                            <p>💾 <strong>Bộ nhớ RAM:</strong> ${p.ram}</p>
+                            <p>💽 <strong>Lưu trữ:</strong> ${p.storage}</p>
+                            <p>📱 <strong>Màn hình:</strong> ${p.screen}</p>
+                        </div>
+                        <button onclick="addToCart(${p.id}); closeDetailModal();" class="w-full py-3 bg-cyan-500 font-bold text-black rounded-xl hover:bg-cyan-400">
+                            Thêm Vào Giỏ Hàng
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+        function closeDetailModal() { document.getElementById('detailModal').classList.add('hidden'); }
+
+        // PROMO IPHONE FLIP POSTER & COUNTDOWN
+        function toggleFlipPoster() {
+            document.getElementById('flipPoster').classList.toggle('hidden');
+        }
+        function viewFlipDetails() {
+            showDetail(1);
+        }
+        function startCountdown() {
+            const target = new Date('2026-11-30T23:59:59').getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = target - now;
+                if (diff > 0) {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    document.getElementById('countdownTimer').innerText = `${d}d : ${h}h : ${m}m : ${s}s`;
+                }
+            }, 1000);
+        }
+
+        // ARCADE HUB LOGIC
+        function toggleArcadeHub() {
+            document.getElementById('arcadeModal').classList.toggle('hidden');
+        }
+
+        function switchGame(game) {
+            currentGame = game;
+            document.getElementById('snakeContainer').classList.toggle('hidden', game !== 'snake');
+            document.getElementById('tetrisContainer').classList.toggle('hidden', game !== 'tetris');
+            document.getElementById('2048Container').classList.toggle('hidden', game !== '2048');
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+        }
+
+        // KEYBOARD WASD HANDLING
+        function setupWASDListeners() {
+            window.addEventListener('keydown', (e) => {
+                const k = e.key.toUpperCase();
+                if (['W', 'A', 'S', 'D'].includes(k)) {
+                    highlightHUDKey(k);
+                    handleGameInput(k);
+                }
+            });
+        }
+
+        function triggerKey(k) {
+            highlightHUDKey(k);
+            handleGameInput(k);
+        }
+
+        function highlightHUDKey(k) {
+            const el = document.getElementById('key' + k);
+            if (el) {
+                el.classList.add('bg-cyan-500', 'text-black');
+                setTimeout(() => el.classList.remove('bg-cyan-500', 'text-black'), 150);
+            }
+        }
+
+        function handleGameInput(k) {
+            if (currentGame === 'snake') handleSnakeInput(k);
+            else if (currentGame === 'tetris') handleTetrisInput(k);
+            else if (currentGame === '2048') handle2048Input(k);
+        }
+
+        function showGameOver(score) {
+            document.getElementById('gameOverText').innerText = `Điểm số đạt được: ${score}`;
+            document.getElementById('gameOverOverlay').classList.remove('hidden');
+        }
+
+        function restartCurrentGame() {
+            document.getElementById('gameOverOverlay').classList.add('hidden');
+            if (currentGame === 'snake') initSnakeGame();
+            else if (currentGame === 'tetris') initTetrisGame();
+            else if (currentGame === '2048') init2048Game();
+        }
+
+        // --- SNAKE GAME ---
+        let snake, food, snakeDir, snakeScore = 0, snakeLoop;
+        function initSnakeGame() {
+            clearInterval(snakeLoop);
+            const canvas = document.getElementById('snakeCanvas');
+            const ctx = canvas.getContext('2d');
+            snake = [{ x: 5, y: 5 }];
+            food = { x: 10, y: 10 };
+            snakeDir = 'D';
+            snakeScore = 0;
+            document.getElementById('snakeScore').innerText = '0';
+
+            snakeLoop = setInterval(() => {
+                let head = { ...snake[0] };
+                if (snakeDir === 'W') head.y--;
+                if (snakeDir === 'S') head.y++;
+                if (snakeDir === 'A') head.x--;
+                if (snakeDir === 'D') head.x++;
+
+                if (head.x < 0 || head.x >= 15 || head.y < 0 || head.y >= 15 || snake.some(s => s.x === head.x && s.y === head.y)) {
+                    clearInterval(snakeLoop);
+                    showGameOver(snakeScore);
+                    return;
+                }
+
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    snakeScore += 10;
+                    document.getElementById('snakeScore').innerText = snakeScore;
+                    food = { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15) };
+                } else {
+                    snake.pop();
+                }
+
+                ctx.fillStyle = '#030712'; ctx.fillRect(0, 0, 300, 300);
+                ctx.fillStyle = '#ff007f'; ctx.fillRect(food.x * 20, food.y * 20, 18, 18);
+                ctx.fillStyle = '#00f0ff';
+                snake.forEach(s => ctx.fillRect(s.x * 20, s.y * 20, 18, 18));
+            }, 120);
+        }
+        function handleSnakeInput(k) {
+            if (k === 'W' && snakeDir !== 'S') snakeDir = 'W';
+            if (k === 'S' && snakeDir !== 'W') snakeDir = 'S';
+            if (k === 'A' && snakeDir !== 'D') snakeDir = 'A';
+            if (k === 'D' && snakeDir !== 'A') snakeDir = 'D';
+        }
+
+        // --- TETRIS GAME ---
+        let tetrisLoop, tetrisScore = 0;
+        function initTetrisGame() {
+            clearInterval(tetrisLoop);
+            tetrisScore = 0;
+            document.getElementById('tetrisScore').innerText = '0';
+            const canvas = document.getElementById('tetrisCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#030712'; ctx.fillRect(0, 0, 200, 300);
+            ctx.fillStyle = '#00f0ff';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('Nút A/D: Trái/Phải', 40, 140);
+            ctx.fillText('Nút W: Xoay | S: Rơi', 40, 160);
+        }
+        function handleTetrisInput(k) {
+            tetrisScore += 5;
+            document.getElementById('tetrisScore').innerText = tetrisScore;
+        }
+
+        // --- 2048 GAME ---
+        let board2048 = [], score2048 = 0;
+        function init2048Game() {
+            board2048 = Array(16).fill(0);
+            score2048 = 0;
+            addTile2048(); addTile2048();
+            render2048();
+        }
+        function addTile2048() {
+            let empty = board2048.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+            if (empty.length) {
+                let idx = empty[Math.floor(Math.random() * empty.length)];
+                board2048[idx] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
+        function render2048() {
+            const grid = document.getElementById('grid2048');
+            grid.innerHTML = board2048.map(v => `
+                <div class="flex items-center justify-center font-bold text-sm rounded bg-gray-900 border border-gray-800 ${v ? 'text-cyan-400 bg-gray-800' : 'text-gray-700'}">
+                    ${v || ''}
+                </div>
+            `).join('');
+            document.getElementById('score2048').innerText = score2048;
+        }
+        function handle2048Input(k) {
+            score2048 += 2;
+            addTile2048();
+            render2048();
+        }
+    </script>
+</body>
+</html>
